@@ -1,16 +1,18 @@
 from tkinter import *
-
-
 class Application(Frame):
+    """GUI application that creates story from user input"""
     def __init__(self, master):
+        """Initialize Frame"""
         super(Application, self).__init__(master)
         self.grid()
         self.create_widgets()
 
     def create_widgets(self):
+        """Create widgets to get story info and to display story"""
+        #create instruction label
         Label(self,
               text="enter info for story",
-              ).grid(row=0, column=0, columnspan=2, sticky=W)
+              ).grid(row = 0, column = 0, columnspan = 2, sticky = W)
         Label(self,
               text="Person: ",
               ).grid(row=1, column=0, sticky=W)
@@ -58,8 +60,48 @@ class Application(Frame):
         for part in body_parts:
             Radiobutton(self,
                         text = part,
-                        variable = self.body_part
+                        variable = self.body_part,
+                        value = part
                         ).grid(row = 5, column = column, sticky = W)
-            self.story_txt = Text(self, width = 75, height= 10, wrap = WORD)
-            self.story_txt.grid(row = 7, column = 0, columnspan = 4)
-            
+            column += 1
+        Button(self,
+               text = part,
+               command = self.tell_story
+               ).grid(row = 6, column = 0, sticky = W)
+        self.story_txt = Text(self, width = 75, height= 10, wrap = WORD)
+        self.story_txt.grid(row = 7, column = 0, columnspan = 4)
+    def tell_story(self):
+        """Fill text box with new story based on user input"""
+        #Get values from GUI
+        person = self.person_ent.get()
+        noun = self.person_ent.get()
+        verb = self.person_ent.get()
+        adjectives = ""
+        if self.is_icthy.get():
+            adjectives += "icthy, "
+        if self.is_joyous.get():
+            adjectives += "joyous, "
+        if self.is_electric.get():
+            adjectives += "electric, "
+        body_part = self.body_part.get()
+
+        #story
+        story = "The famous explorer"
+        story += person
+        story = "had nearly given up"
+        story += noun.title()
+        story += noun
+        story += person + "."
+        story += adjectives
+        story += person + "."
+        story += body_part + "."
+        story += noun
+        story += verb
+
+
+        self.story_txt.delete(0.0, END)
+        self.story_txt.insert(0.0, story)
+root = Tk()
+root.title("Mad Lib")
+app = Application(root)
+root.mainloop()
